@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<structure:Structure xmlns:structure="http://www.hundsun.com/ares/studio/uft/structure/1.0.0" chineseName="银行间组合持仓阶段汇总表" description="银行间组合持仓阶段汇总" objectId="620">
+  <properties id="business_date"/>
+  <properties id="company_id"/>
+  <properties id="fund_id"/>
+  <properties id="asset_id"/>
+  <properties id="combi_id"/>
+  <properties id="invest_type"/>
+  <properties id="position_type"/>
+  <properties id="inter_code"/>
+  <properties id="position_stock_type"/>
+  <properties id="market_no"/>
+  <properties id="market_group_no"/>
+  <properties id="generate_stage"/>
+  <properties id="occur_amount"/>
+  <properties id="original_cost"/>
+  <properties id="carryover_cost"/>
+  <properties id="original_real_cost"/>
+  <properties id="carryover_real_cost"/>
+  <properties id="original_interest_cost"/>
+  <properties id="carryover_interest_cost"/>
+  <properties id="original_profit"/>
+  <properties id="carryover_profit"/>
+  <properties id="original_real_profit"/>
+  <properties id="carryover_real_profit"/>
+  <properties id="original_interest_profit"/>
+  <properties id="carryover_interest_profit"/>
+  <properties id="capital_account_id"/>
+  <properties id="total_buy_amount"/>
+  <properties id="total_sale_amount"/>
+  <properties id="total_buy_balance"/>
+  <properties id="total_sale_balance"/>
+  <indexs name="ufc_uniq_cbankstageunitstock">
+    <items attrname="business_date"/>
+    <items attrname="company_id"/>
+    <items attrname="asset_id"/>
+    <items attrname="combi_id"/>
+    <items attrname="invest_type"/>
+    <items attrname="position_type"/>
+    <items attrname="inter_code"/>
+    <items attrname="position_stock_type"/>
+    <items attrname="generate_stage"/>
+  </indexs>
+  <indexs name="ufc_idx_cbankstageunitstock" indexType="部分匹配">
+    <items attrname="business_date"/>
+    <items attrname="market_group_no"/>
+    <items attrname="company_id"/>
+    <items attrname="fund_id"/>
+    <items attrname="asset_id"/>
+    <items attrname="combi_id"/>
+    <items attrname="invest_type"/>
+    <items attrname="position_type"/>
+    <items attrname="inter_code"/>
+    <items attrname="position_stock_type"/>
+    <items attrname="generate_stage"/>
+    <childIndexs>
+      <items attrname="business_date"/>
+      <items attrname="market_group_no"/>
+      <items attrname="company_id"/>
+      <items attrname="fund_id"/>
+    </childIndexs>
+    <childIndexs>
+      <items attrname="asset_id"/>
+      <items attrname="combi_id"/>
+      <items attrname="invest_type"/>
+      <items attrname="position_type"/>
+      <items attrname="inter_code"/>
+      <items attrname="position_stock_type"/>
+      <items attrname="generate_stage"/>
+    </childIndexs>
+  </indexs>
+  <indexs name="ufc_idx_cbankstageunitstock_generatestage" indexType="部分匹配">
+    <items attrname="business_date"/>
+    <items attrname="market_group_no"/>
+    <items attrname="company_id"/>
+    <items attrname="fund_id"/>
+    <items attrname="generate_stage"/>
+    <items attrname="asset_id"/>
+    <items attrname="combi_id"/>
+    <items attrname="invest_type"/>
+    <items attrname="position_type"/>
+    <items attrname="inter_code"/>
+    <items attrname="position_stock_type"/>
+    <childIndexs>
+      <items attrname="business_date"/>
+      <items attrname="market_group_no"/>
+      <items attrname="company_id"/>
+      <items attrname="fund_id"/>
+      <items attrname="generate_stage"/>
+    </childIndexs>
+    <childIndexs>
+      <items attrname="asset_id"/>
+      <items attrname="combi_id"/>
+      <items attrname="invest_type"/>
+      <items attrname="position_type"/>
+      <items attrname="inter_code"/>
+      <items attrname="position_stock_type"/>
+    </childIndexs>
+  </indexs>
+  <indexs name="ufc_idx_cbankstageunitstock_nostage" indexType="部分匹配">
+    <items attrname="business_date"/>
+    <items attrname="company_id"/>
+    <items attrname="asset_id"/>
+    <items attrname="combi_id"/>
+    <items attrname="invest_type"/>
+    <items attrname="position_type"/>
+    <items attrname="inter_code"/>
+    <items attrname="position_stock_type"/>
+    <items attrname="generate_stage"/>
+    <childIndexs>
+      <items attrname="business_date"/>
+      <items attrname="company_id"/>
+      <items attrname="asset_id"/>
+      <items attrname="combi_id"/>
+      <items attrname="invest_type"/>
+      <items attrname="position_type"/>
+      <items attrname="inter_code"/>
+      <items attrname="position_stock_type"/>
+    </childIndexs>
+    <childIndexs>
+      <items attrname="generate_stage"/>
+    </childIndexs>
+  </indexs>
+</structure:Structure>

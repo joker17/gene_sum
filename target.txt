@@ -1,0 +1,226 @@
+	[记录日志][LOG_DETAIL][]["LF_批处理公共_银行间组合持仓余额生成(1952551)_传入参数"][
+       @business_date,@company_id,@fund_id,@market_group_no,@next_business_date,
+       @flow_id
+    ]
+  //20160705 add hejaing
+ 
+    [获取记录][ufc_cfundmarket(ufc_uniq_fundmarket)][company_id=@company_id, fund_id=@fund_id, market_group_no=@market_group_no][]
+
+  [事务处理开始]
+  //先删除记录
+  [遍历记录开始][ufc_cfundmarket.ufc_cbankunitstock(ufc_idx_cbankunitstock)][
+    business_date = @next_business_date,  company_id = @company_id, 
+    fund_id = @fund_id,              market_group_no = @market_group_no
+  ]
+  {
+    [删除记录][ufc_cbankunitstock]
+  }
+  [遍历记录结束]
+  
+  [事务处理结束]
+  
+  [事务处理开始]
+  //汇总阶段 只汇总0-6的，预初始化和预初始化期初数据不要
+
+  [并发遍历记录开始][ufc_cfundmarket.ufc_cbankstageunitstock(ufc_idx_cbankstageunitstock)][
+    business_date = @next_business_date,  company_id = @company_id, 
+    fund_id = @fund_id,              market_group_no = @market_group_no
+  ][asset_id = @asset_id,                                 combi_id = @combi_id,
+    invest_type = @invest_type,             position_type = @position_type, 
+    position_stock_type = @position_stock_type,           inter_code = @inter_code,               market_no = @market_no,  
+    occur_amount = @current_amount,                     generate_stage = @generate_stage, 
+    original_cost = @original_cost,                       carryover_cost = @carryover_cost, 
+    original_real_cost = @original_real_cost,             carryover_real_cost = @carryover_real_cost, 
+    original_interest_cost = @original_interest_cost,     carryover_interest_cost = @carryover_interest_cost,  
+    original_profit = @original_profit,                   carryover_profit = @carryover_profit, 
+    original_real_profit = @original_real_profit,         carryover_real_profit = @carryover_real_profit,   
+    original_interest_profit = @original_interest_profit, carryover_interest_profit = @carryover_interest_profit,
+    capital_account_id = @capital_account_id,
+    total_buy_amount = @total_buy_amount,									total_sale_amount = @total_sale_amount,
+		total_buy_balance = @total_buy_balance,								total_sale_balance = @total_sale_balance]
+  { 
+    if(@flow_id == CONST_INT_FLOWPREINIT 
+        || (@flow_id == CONST_INT_FLOWINIT && (@generate_stage != '7' && @generate_stage != '8')))
+    {
+      @v_flag = CONST_FLAG_YES;
+      @v1_asset_id = @asset_id;
+      @v1_combi_id = @combi_id;
+      @v1_passive_invest_flag = @passive_invest_flag;
+      @v1_invest_type = @invest_type;
+      @v1_position_type = @position_type;
+      @v1_position_stock_type = @position_stock_type;
+      @v1_inter_code = @inter_code;
+      @v1_market_no = @market_no;
+      @v1_market_group_no = @market_group_no;
+      @v1_current_amount = @current_amount;
+      @v1_original_cost = @original_cost;
+      @v1_carryover_cost = @carryover_cost;
+      @v1_original_real_cost = @original_real_cost;
+      @v1_carryover_real_cost = @carryover_real_cost;
+      @v1_original_interest_cost = @original_interest_cost;
+      @v1_carryover_interest_cost = @carryover_interest_cost;
+      @v1_original_profit = @original_profit;
+      @v1_carryover_profit = @carryover_profit;
+      @v1_original_real_profit = @original_real_profit;
+      @v1_carryover_real_profit = @carryover_real_profit;
+      @v1_original_interest_profit = @original_interest_profit;
+      @v1_carryover_interest_profit = @carryover_interest_profit;
+      @v1_capital_account_id = @capital_account_id;
+			@v1_total_buy_amount = @total_buy_amount;
+			@v1_total_sale_amount = @total_sale_amount;
+			@v1_total_buy_balance = @total_buy_balance;
+			@v1_total_sale_balance = @total_sale_balance;
+      
+      
+      @v_num +=1;
+      
+      if(@v_asset_id == @asset_id && @v_combi_id == @combi_id && @v_invest_type == @invest_type
+          && @v_position_type == @position_type && @v_passive_invest_flag == @passive_invest_flag
+          && @v_position_stock_type == @position_stock_type && @v_inter_code ==@inter_code)
+        {
+          @current_amount = @current_amount + @v_current_amount;
+          @original_cost = @original_cost + @v_original_cost;
+          @carryover_cost = @carryover_cost + @v_carryover_cost;
+          @original_real_cost = @original_real_cost + @v_original_real_cost;
+          @carryover_real_cost = @carryover_real_cost + @v_carryover_real_cost;
+          @original_interest_cost = @original_interest_cost + @v_original_interest_cost;
+          @carryover_interest_cost = @carryover_interest_cost + @v_carryover_interest_cost;
+          @original_profit = @original_profit + @v_original_profit;
+          @carryover_profit = @carryover_profit + @v_carryover_profit;
+          @original_real_profit = @original_real_profit + @v_original_real_profit;
+          @carryover_real_profit = @carryover_real_profit + @v_carryover_real_profit;
+          @original_interest_profit = @original_interest_profit + @v_original_interest_profit;
+          @carryover_interest_profit = @carryover_interest_profit + @v_carryover_interest_profit;
+					@total_buy_amount = @total_buy_amount + @v_total_buy_amount;
+					@total_sale_amount = @total_sale_amount + @v_total_sale_amount;
+					@total_buy_balance = @total_buy_balance + @v_total_buy_balance;
+					@total_sale_balance = @total_sale_balance + @v_total_sale_balance;
+        }
+        
+        if(@v_num !=1 
+        &&(@v_asset_id != @asset_id || @v_combi_id != @combi_id 
+          || @v_invest_type != @invest_type || @v_position_type != @position_type || @v_passive_invest_flag != @passive_invest_flag
+          || @v_position_stock_type != @position_stock_type || @v_inter_code != @inter_code))
+          {
+            //插入记录
+            [插入记录][ufc_cbankunitstock][
+              business_date = @next_business_date,
+              asset_id = @v_asset_id,
+              combi_id = @v_combi_id,
+              invest_type = @v_invest_type,
+              position_type = @v_position_type,
+              position_stock_type = @v_position_stock_type,
+              inter_code = @v_inter_code,
+              market_no = @v_market_no,
+              market_group_no = @v_market_group_no,
+              current_amount = @v_current_amount,
+              original_cost = @v_original_cost,
+              carryover_cost = @v_carryover_cost,
+              original_real_cost = @v_original_real_cost,
+              carryover_real_cost = @v_carryover_real_cost,
+              original_interest_cost = @v_original_interest_cost,
+              carryover_interest_cost = @v_carryover_interest_cost,
+              original_profit = @v_original_profit,
+              carryover_profit = @v_carryover_profit,
+              original_real_profit = @v_original_real_profit,
+              carryover_real_profit = @v_carryover_real_profit,
+              original_interest_profit = @v_original_interest_profit,
+              carryover_interest_profit = @v_carryover_interest_profit,
+              capital_account_id = @v_capital_account_id,
+							total_buy_amount = @v_total_buy_amount,				total_sale_amount = @v_total_sale_amount,
+							total_buy_balance = @v_total_buy_balance,			total_sale_balance = @v_total_sale_balance]
+            
+            @v_num = 1;
+            @asset_id = @v1_asset_id;
+            @combi_id = @v1_combi_id;
+            @passive_invest_flag = @v1_passive_invest_flag;
+            @invest_type = @v1_invest_type;
+            @position_type = @v1_position_type;
+            @position_stock_type = @v1_position_stock_type;
+            @inter_code = @v1_inter_code;
+            @market_no = @v1_market_no;
+            @market_group_no = @v1_market_group_no;
+            @current_amount = @v1_current_amount;
+            @original_cost = @v1_original_cost;
+            @carryover_cost = @v1_carryover_cost;
+            @original_real_cost = @v1_original_real_cost;
+            @carryover_real_cost = @v1_carryover_real_cost;
+            @original_interest_cost = @v1_original_interest_cost;
+            @carryover_interest_cost = @v1_carryover_interest_cost;
+            @original_profit = @v1_original_profit;
+            @carryover_profit = @v1_carryover_profit;
+            @original_real_profit = @v1_original_real_profit;
+            @carryover_real_profit = @v1_carryover_real_profit;
+            @original_interest_profit = @v1_original_interest_profit;
+            @carryover_interest_profit = @v1_carryover_interest_profit;
+            @capital_account_id = @v1_capital_account_id;
+						@total_buy_amount = @v1_total_buy_amount;
+						@total_sale_amount = @v1_total_sale_amount;
+						@total_buy_balance = @v1_total_buy_balance;
+						@total_sale_balance = @v1_total_sale_balance;
+          }
+          
+          @v_asset_id = @asset_id;
+          @v_combi_id = @combi_id;
+          @v_passive_invest_flag = @passive_invest_flag;
+          @v_invest_type = @invest_type;
+          @v_position_type = @position_type;
+          @v_position_stock_type = @position_stock_type;
+          @v_inter_code = @inter_code;
+          @v_market_no = @market_no;
+          @v_market_group_no = @market_group_no;
+          @v_current_amount = @current_amount;
+          @v_original_cost = @original_cost;
+          @v_carryover_cost = @carryover_cost;
+          @v_original_real_cost = @original_real_cost;
+          @v_carryover_real_cost = @carryover_real_cost;
+          @v_original_interest_cost = @original_interest_cost;
+          @v_carryover_interest_cost = @carryover_interest_cost;
+          @v_original_profit = @original_profit;
+          @v_carryover_profit = @carryover_profit;
+          @v_original_real_profit = @original_real_profit;
+          @v_carryover_real_profit = @carryover_real_profit;
+          @v_original_interest_profit = @original_interest_profit;
+          @v_carryover_interest_profit = @carryover_interest_profit;
+          @v_capital_account_id = @capital_account_id;
+					@v_total_buy_amount = @total_buy_amount;
+					@v_total_sale_amount = @total_sale_amount;
+					@v_total_buy_balance = @total_buy_balance;
+					@v_total_sale_balance = @total_sale_balance;
+    }
+  }
+  [并发遍历记录结束]
+  
+  //v_flag==1 说明最后一次是匹配的，所以需要在执行一次插入操作并且未执行插入操作
+  if(@v_num > 0 && @v_flag == CONST_FLAG_YES)
+  {
+    [插入记录][ufc_cbankunitstock][
+              asset_id = @v_asset_id,
+              combi_id = @v_combi_id,
+              business_date = @next_business_date,
+              invest_type = @v_invest_type,
+              position_type = @v_position_type,
+              position_stock_type = @v_position_stock_type,
+              inter_code = @v_inter_code,
+              market_no = @v_market_no,
+              market_group_no = @v_market_group_no,
+              current_amount = @v_current_amount,
+              original_cost = @v_original_cost,
+              carryover_cost = @v_carryover_cost,
+              original_real_cost = @v_original_real_cost,
+              carryover_real_cost = @v_carryover_real_cost,
+              original_interest_cost = @v_original_interest_cost,
+              carryover_interest_cost = @v_carryover_interest_cost,
+              original_profit = @v_original_profit,
+              carryover_profit = @v_carryover_profit,
+              original_real_profit = @v_original_real_profit,
+              carryover_real_profit = @v_carryover_real_profit,
+              original_interest_profit = @v_original_interest_profit,
+              carryover_interest_profit = @v_carryover_interest_profit,
+              capital_account_id = @v_capital_account_id,
+							total_buy_amount = @v_total_buy_amount,				total_sale_amount = @v_total_sale_amount,
+							total_buy_balance = @v_total_buy_balance,			total_sale_balance = @v_total_sale_balance]
+  }
+  [事务处理结束]
+        
+	[记录日志][LOG_DETAIL][]["LF_批处理公共_银行间组合持仓余额生成(1952551)_传出参数"][]
