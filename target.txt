@@ -1,4 +1,4 @@
-	[记录日志][LOG_DETAIL][]["LF_批处理公共_银行间组合持仓余额生成(1952551)_传入参数"][
+	[记录日志][LOG_DETAIL][]["LF_批处理公共_组合持额生成(1952551)_传入参数"][
        @business_date,@company_id,@fund_id,@market_group_no,@next_business_date,
        @flow_id
     ]
