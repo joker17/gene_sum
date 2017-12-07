@@ -10,17 +10,22 @@ cacllist = []
 
 ufc_name = "ufc_cbankstageunitstock"
 #ufc_index = "ufc_idx_cbankstageunitstock"
-ufc_index = "ufc_idx_cbankstageunitstock_generatestage"
 
 def generate_sum(filepath, cacllist, index_name = ''):
     print('in param')
     print(cacllist)
+    ufc_index = "ufc_idx_cbankstageunitstock_generatestage"
+
     if filepath.count('\\') > 0:
         ufc_name = filepath.split('\\')[-1].split('.')[0]
+    elif filepath.count('//') > 0:
+        ufc_name = filepath.split('//')[-1].split('.')[0]
+    elif filepath.count('/') > 0:
+        ufc_name = filepath.split('/')[-1].split('.')[0]
     else:
         ufc_name = filepath.split('.')[0]
     if len(index_name) > 0:
-        ufc_name = index_name
+        ufc_index = index_name
 
     #tree = ET.parse(ufc_name + ".uftstructure")
     tree = ET.parse(filepath)
@@ -37,11 +42,11 @@ def generate_sum(filepath, cacllist, index_name = ''):
                 grouplist.append(tmpnode.get("attrname"))
 
     def formexp(inlist, exp, del_endstr = "", return_num = 1):
-        indexlist = inlist
+        tmp_indexlist = inlist
         indexstr=""
         count = exp.count("%")
         i = 0
-        for tmpword in indexlist:
+        for tmpword in tmp_indexlist:
             i += 1
             if count == 1:
                 indexstr += (exp % (tmpword) )
